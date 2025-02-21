@@ -1,0 +1,31 @@
+{
+  "name": "@fastpix/video-data-shakaplayer",
+  "version": "1.0.0",
+  "description": "FastPix Video Data SDK for real-time monitoring of shakaplayer.",
+  "main": "dist/index.js",
+  "files": [
+    "dist/*"
+  ],
+  "exports": {
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.js"
+  },
+  "scripts": {
+    "format": "prettier --write \"src/**/*.ts\"",
+    "build:esm": "esbuild src/index.ts --bundle --outfile=dist/index.mjs --format=esm --minify",
+    "build:cjs": "esbuild src/index.ts --bundle --outfile=dist/index.cjs --format=cjs --minify",
+    "build:js": "esbuild src/index.ts --bundle --outfile=dist/index.js --format=iife --minify",
+    "build": "npm run format && npm run build:esm && npm run build:cjs && npm run build:js"
+  },
+  "author": "FastPix, Inc",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "@fastpix/video-data-core": "^1.0.0"
+  }
+}
