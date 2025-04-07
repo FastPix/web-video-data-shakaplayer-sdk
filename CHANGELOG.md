@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1]
+- Updated Video Data Core SDK with minor fixes and improvements.
+
 ## [1.0.0]
 
 ### Added

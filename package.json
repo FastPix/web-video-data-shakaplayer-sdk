@@ -1,6 +1,6 @@
 {
   "name": "@fastpix/video-data-shakaplayer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FastPix Video Data SDK for real-time monitoring of shakaplayer.",
   "main": "dist/index.js",
   "files": [
@@ -26,6 +26,6 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
-    "@fastpix/video-data-core": "^1.0.0"
+    "@fastpix/video-data-core": "^1.0.1"
   }
 }

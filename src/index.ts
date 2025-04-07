@@ -29,8 +29,9 @@ const shakaRequestType: Record<number, string> = {
 // Fetch a specific parameter from the video element.
 function fetchVideoParam(player: VideoPlayer, param: string): any {
   if (!player) return undefined;
+  const mediaElement: HTMLMediaElement | null = player.getMediaElement();
 
-  const mediaElement: HTMLMediaElement | any = player.getMediaElement();
+  // @ts-ignore
   return mediaElement ? mediaElement[param] : undefined;
 }
 
@@ -59,9 +60,9 @@ function isFullScreenElement(player: VideoPlayer): boolean {
   }
 
   const fullscreenElement =
-    documentRef.fullscreenElement ||
-    documentRef.webkitFullscreenElement ||
-    documentRef.mozFullScreenElement ||
+    documentRef.fullscreenElement ??
+    documentRef.webkitFullscreenElement ??
+    documentRef.mozFullScreenElement ??
     documentRef.msFullscreenElement;
 
   return fullscreenElement === player.getMediaElement();
@@ -167,7 +168,7 @@ function registerNetworkingFilters(
 
 // Extract error message from the error object.
 function getErrorMessage(err: any, shakaElement: any): string {
-  const utilError = shakaElement?.util?.Error?.Code || {};
+  const utilError = shakaElement?.util?.Error?.Code ?? {};
   const codeName = Object.keys(utilError).find(
     (key) => utilError[key] === err.code,
   );
@@ -213,10 +214,8 @@ function handleAutomaticErrorTracking(
 function loadShakaPlayer(
   player: VideoPlayer,
   options: EventsInterface,
-  shaka: any = (window as any).shaka || (globalThis as any).shaka,
+  shaka: any = (window as any).shaka ?? (globalThis as any).shaka,
 ) {
-  const playerToken = fastpixMetrix.utilityMethods.generateIdToken();
-
   const errorTracking = {
     automaticErrorTracking: options.automaticErrorTracking ?? true,
   };
@@ -245,6 +244,12 @@ function loadShakaPlayer(
       };
     }
   }
+
+  if (player?.fp) {
+    player.fp.destroy();
+  }
+
+  const playerToken = fastpixMetrix.utilityMethods.generateIdToken();
 
   // Fetch the current playhead time of the video player.
   function fetchPlayheadTime(player: VideoPlayer): number {
@@ -276,6 +281,8 @@ function loadShakaPlayer(
     };
   }
 
+  player.fp = player.fp ?? {};
+
   player.fp = {
     dispatch: (eventName, data) =>
       fastpixMetrix.dispatch(playerToken, eventName, data),
@@ -289,8 +296,8 @@ function loadShakaPlayer(
     ...options.data,
     player_software_name: "Shaka Player",
     player_software_version: player?.constructor?.version,
-    player_fastpix_sdk_name: "shakaplayer-fastpix",
-    player_fastpix_sdk_version: "1.0.0",
+    player_fastpix_sdk_name: "fastpix-shakaplayer-monitoring",
+    player_fastpix_sdk_version: "1.0.1",
   };
 
   let isVideoLoaded = false;
@@ -345,6 +352,10 @@ function loadShakaPlayer(
     });
 
     player.fp.dispatch("destroy");
+
+    if (player?.fp) {
+      delete (player as any)?.fp;
+    }
   };
 
   fastpixMetrix.configure(playerToken, options);
