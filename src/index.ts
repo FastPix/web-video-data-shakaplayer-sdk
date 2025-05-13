@@ -297,7 +297,7 @@ function loadShakaPlayer(
     player_software_name: "Shaka Player",
     player_software_version: player?.constructor?.version,
     player_fastpix_sdk_name: "fastpix-shakaplayer-monitoring",
-    player_fastpix_sdk_version: "1.0.2",
+    player_fastpix_sdk_version: "1.0.3",
   };
 
   let isVideoLoaded = false;

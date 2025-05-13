@@ -1,6 +1,6 @@
 {
   "name": "@fastpix/video-data-shakaplayer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "FastPix Video Data SDK for real-time monitoring of shakaplayer.",
   "main": "dist/index.js",
   "files": [
@@ -18,6 +18,23 @@
     "build:js": "esbuild src/index.ts --bundle --outfile=dist/index.js --format=iife --minify",
     "build": "npm run format && npm run build:esm && npm run build:cjs && npm run build:js"
   },
+  "keywords": [
+    "FastPix video analytics",
+    "Shaka Player monitoring",
+    "Shaka Player video analytics",
+    "Shaka Player integration",
+    "Shaka Player SDK",
+    "video analytics for Shaka Player",
+    "HTML5 video analytics",
+    "real-time video analytics SDK",
+    "streaming video telemetry",
+    "video quality monitoring",
+    "QoE analytics for video",
+    "adaptive bitrate streaming analytics",
+    "video player data collection",
+    "streaming playback metrics",
+    "media player performance monitoring"
+  ],
   "author": "FastPix, Inc",
   "license": "MIT",
   "devDependencies": {
@@ -26,6 +43,6 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
-    "@fastpix/video-data-core": "^1.0.1"
+    "@fastpix/video-data-core": "^1.0.3"
   }
 }
