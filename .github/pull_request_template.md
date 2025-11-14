@@ -8,6 +8,7 @@
 - [ ] Documentation errors fixed
 - [ ] Code examples updated
 - [ ] Links and references updated
+- [ ] Other
 
 ### Files Modified
 - [ ] README.md
