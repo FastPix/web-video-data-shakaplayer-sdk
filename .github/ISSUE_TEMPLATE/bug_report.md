@@ -12,9 +12,9 @@ Thank you for taking the time to report a bug with the FastPix Video Data SDK fo
 
 ## Description
 **Clear and concise description of the bug:**
-
+```
 <!-- Please provide a detailed description of what you're experiencing -->
-
+```
 ## Environment Information
 
 ### System Details
@@ -135,8 +135,9 @@ Content-Type: application/json
 ```
 
 ### Screenshots
+```
 <!-- If applicable, please attach screenshots that help explain your issue -->
-
+```
 ## Additional Context
 
 ### Configuration
@@ -165,8 +166,9 @@ const fastPixShakaIntegration = loadShakaPlayer(
 ```
 
 ### Workarounds
+```
 <!-- If you've found any workarounds, please describe them here -->
-
+```
 ## Priority
 Please indicate the priority of this bug:
 
