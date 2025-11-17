@@ -19,10 +19,10 @@
 
 ### Summary
 **Brief description of changes:**
-
+```
 <!-- What documentation was added, updated, or fixed? -->
-
-### Code Examples
+```
+### Code Examples (if Applicable)
 ```javascript
 // If you added/updated code examples, include them here
 import loadShakaPlayer from "@fastpix/video-data-shakaplayer";
