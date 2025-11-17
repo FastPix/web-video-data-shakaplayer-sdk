@@ -20,9 +20,9 @@ Thank you for reaching out! We're here to help you with the FastPix Video Data S
 
 ## Question
 **What would you like to know?**
-
+```
 <!-- Please provide a clear, specific question -->
-
+```
 ## What You've Tried
 **What have you already attempted to solve this?**
 
@@ -74,9 +74,9 @@ const fastPixShakaIntegration = loadShakaPlayer(
 
 ## Expected Outcome
 **What are you trying to achieve?**
-
+```
 <!-- Describe your end goal -->
-
+```
 ## Error Messages (if any)
 ```
 <!-- If you're getting errors, paste them here -->
