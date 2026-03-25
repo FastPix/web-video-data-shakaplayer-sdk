@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shaka Player + FastPix monitoring test</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    video {
+      width: 100%;
+      max-height: 70vh;
+      background: #111;
+    }
+    .hint {
+      color: #444;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Shaka Player + FastPix monitoring</h1>
+  <p class="hint">
+    Set <code>workspace_id</code> in the script to your FastPix workspace key so events reach the dashboard.
+    Playback uses a public sample stream; replace <code>videoUrl</code> with your manifest when testing your own content.
+  </p>
+  <video
+    id="video-player"
+    controls
+    playsinline
+    crossorigin="anonymous"
+  ></video>
+
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.12.7/dist/shaka-player.compiled.js"></script>
+  <script src="../dist/index.js"></script>
+  <script>
+    (function () {
+      var shakaRef = window.shaka;
+
+      // Must match FastPix workspace (see README)
+      var playerMetadata = {
+        workspace_id: "your-workspace-key",
+        player_name: "test-page-player",
+        video_title: "Shaka monitoring test",
+        video_id: "test-shaka-001",
+        viewer_id: "test-viewer",
+      };
+
+      var videoUrl =
+        "your-video-url";
+
+      function tearDown(player) {
+        if (player && player.fp && typeof player.fp.destroy === "function") {
+          player.fp.destroy();
+        }
+        if (player && typeof player.destroy === "function") {
+          player.destroy();
+        }
+      }
+
+      function init() {
+        shakaRef.polyfill.installAll();
+
+        if (!shakaRef.Player.isBrowserSupported()) {
+          console.error("This browser is not supported by Shaka Player.");
+          return;
+        }
+
+        var videoElement = document.getElementById("video-player");
+        if (!videoElement) {
+          console.error('Missing #video-player element.');
+          return;
+        }
+
+        // Capture init time immediately before creating the player (matches README)
+        playerMetadata.player_init_time = loadShakaPlayer.utilityMethods.now();
+
+        var player = new shakaRef.Player(videoElement);
+
+        var fastPixShakaIntegration = loadShakaPlayer(
+          player,
+          {
+            debug: true,
+            data: playerMetadata,
+          },
+          shakaRef,
+        );
+
+        player
+          .load(videoUrl)
+          .then(function () {
+            console.log("Manifest loaded; FastPix monitoring is active for this session.");
+          })
+          .catch(function (error) {
+            if (
+              fastPixShakaIntegration &&
+              typeof fastPixShakaIntegration.handleLoadError === "function"
+            ) {
+              fastPixShakaIntegration.handleLoadError(error);
+            }
+            console.error("Error loading manifest:", error);
+          });
+
+        window.addEventListener("beforeunload", function () {
+          tearDown(player);
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
