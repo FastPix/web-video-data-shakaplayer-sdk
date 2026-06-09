@@ -20,6 +20,22 @@
       color: #444;
       font-size: 0.9rem;
     }
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    .controls input[type="text"] {
+      flex: 1 1 320px;
+      padding: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .controls button {
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -28,6 +44,16 @@
     Set <code>workspace_id</code> in the script to your FastPix workspace key so events reach the dashboard.
     Playback uses a public sample stream; replace <code>videoUrl</code> with your manifest when testing your own content.
   </p>
+  <div class="controls">
+    <input
+      id="url-input"
+      type="text"
+      value="https://stream.fastpix.com/82af62f9-64e8-4fe6-b72b-1ccc42d9874e.m3u8"
+      placeholder="Enter manifest URL (.m3u8 / .mpd)"
+    />
+    <button id="load-btn" type="button">Load</button>
+    <button id="destroy-btn" type="button">Destroy</button>
+  </div>
   <video
     id="video-player"
     controls
@@ -35,23 +61,25 @@
     crossorigin="anonymous"
   ></video>
 
-  <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.12.7/dist/shaka-player.compiled.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.12.7/dist/shaka-player.compiled.js" integrity="sha384-HtIqM8W8H078OnSBEvUzxmni21xyDPh/MwiNFwpwPJLzwvNWrcsAfwndkEvjuh5A" crossorigin="anonymous"></script>
   <script src="../dist/index.js"></script>
   <script>
     (function () {
-      var shakaRef = window.shaka;
+      var shakaRef = globalThis.shaka;
 
       // Must match FastPix workspace (see README)
       var playerMetadata = {
-        workspace_id: "1166872370826313731",
+        workspace_id: "your-workspace-key",
         player_name: "test-page-player",
         video_title: "Shaka monitoring test",
         video_id: "test-shaka-001",
         viewer_id: "test-viewer",
       };
 
-      var videoUrl =
-        "https://stream.fastpix.com/896850b8-bd7b-45db-857d-cb7f9e457932.m3u8";
+      var DEFAULT_URL =
+        "https://stream.fastpix.com/{Playback_id}.m3u8";
+
+      var currentPlayer = null;
 
       function tearDown(player) {
         if (player && player.fp && typeof player.fp.destroy === "function") {
@@ -62,13 +90,17 @@
         }
       }
 
-      function init() {
-        shakaRef.polyfill.installAll();
-
-        if (!shakaRef.Player.isBrowserSupported()) {
-          console.error("This browser is not supported by Shaka Player.");
-          return;
+      function destroyPlayer() {
+        if (currentPlayer) {
+          tearDown(currentPlayer);
+          currentPlayer = null;
+          console.log("Player destroyed; FastPix monitoring stopped.");
         }
+      }
+
+      function loadPlayer(videoUrl) {
+        // Tear down any existing player before creating a new one
+        destroyPlayer();
 
         var videoElement = document.getElementById("video-player");
         if (!videoElement) {
@@ -80,6 +112,7 @@
         playerMetadata.player_init_time = loadShakaPlayer.utilityMethods.now();
 
         var player = new shakaRef.Player(videoElement);
+        currentPlayer = player;
 
         var fastPixShakaIntegration = loadShakaPlayer(
           player,
@@ -104,10 +137,39 @@
             }
             console.error("Error loading manifest:", error);
           });
+      }
 
-        window.addEventListener("beforeunload", function () {
-          tearDown(player);
-        });
+      function init() {
+        shakaRef.polyfill.installAll();
+
+        if (!shakaRef.Player.isBrowserSupported()) {
+          console.error("This browser is not supported by Shaka Player.");
+          return;
+        }
+
+        var urlInput = document.getElementById("url-input");
+        var loadBtn = document.getElementById("load-btn");
+        var destroyBtn = document.getElementById("destroy-btn");
+
+        if (urlInput && !urlInput.value) {
+          urlInput.value = DEFAULT_URL;
+        }
+
+        if (loadBtn) {
+          loadBtn.addEventListener("click", function () {
+            var url = (urlInput && urlInput.value.trim()) || DEFAULT_URL;
+            loadPlayer(url);
+          });
+        }
+
+        if (destroyBtn) {
+          destroyBtn.addEventListener("click", destroyPlayer);
+        }
+
+        globalThis.addEventListener("beforeunload", destroyPlayer);
+
+        // Auto-load the default stream on first render
+        loadPlayer((urlInput && urlInput.value.trim()) || DEFAULT_URL);
       }
 
       if (document.readyState === "loading") {

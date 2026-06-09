@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.6]
+### Security
+- Hardened the test harness against SonarQube findings with code sanitization and safer input handling, ensuring user-provided manifest URLs are trimmed and validated before playback.
+- Added Subresource Integrity (SRI) hash and `crossorigin` attribute to the Shaka Player CDN script to prevent tampered third-party code from executing.
+
+### Changed
+- Replaced `window` references with `globalThis` for safer, environment-agnostic global access.
+- Refactored player lifecycle handling with dedicated load/destroy controls and proper teardown to avoid resource leaks.
+- Added Azure Pipelines configuration (`azure-pipelines.yaml`) and SonarQube project settings (`sonar-project.properties`) for automated code quality and static analysis.
+
 ## [1.0.5]
 ### Changed
 - Updated `@fastpix/video-data-core` to the latest version (1.0.7).
