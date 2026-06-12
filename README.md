@@ -1,6 +1,6 @@
 # Introduction
 
-This SDK simplifies integration steps with [Shaka Player](https://github.com/shaka-project/shaka-player), enabling the collection of player analytics. It enables automatic tracking of video performance metrics, making the data readily available on the [FastPix dashboard](https://dashboard.fastpix.io) for monitoring and analysis. While the SDK is developed in TypeScript, the published npm package currently includes only the JavaScript output. TypeScript support, including type definitions, will be released in a future version.
+This SDK simplifies integration steps with [Shaka Player](https://github.com/shaka-project/shaka-player), enabling the collection of player analytics. It enables automatic tracking of video performance metrics, making the data readily available on the [FastPix dashboard](https://dashboard.fastpix.com/) for monitoring and analysis. While the SDK is developed in TypeScript, the published npm package currently includes only the JavaScript output. TypeScript support, including type definitions, will be released in a future version.
 
 # Key Features:
 
@@ -8,15 +8,15 @@ This SDK simplifies integration steps with [Shaka Player](https://github.com/sha
 - **Monitor Playback Quality:** Ensure video streaming by monitoring real-time metrics, including bitrate, buffering, startup performance, render quality, and playback failure errors.
 - **Error Management:** Identify and resolve playback failures quickly with detailed error reports.
 - **Customizable Tracking:** Flexible configuration to match your specific monitoring needs.
-- **Centralized Dashboard:** Visualize and compare metrics on the [FastPix dashboard](https://dashboard.fastpix.io) to make data-driven decisions.
+- **Centralized Dashboard:** Visualize and compare metrics on the [FastPix dashboard](https://dashboard.fastpix.com/) to make data-driven decisions.
 
 # Prerequisites:
 
 ## Getting started with FastPix:
 
-To track and analyze video performance, initialize the FastPix Data SDK with your Workspace key (learn more about [Workspaces here](https://docs.fastpix.io/docs/workspaces)):
+To track and analyze video performance, initialize the FastPix Data SDK with your Workspace key (learn more about [Workspaces here](https://fastpix.com/docs/getting-started/set-up-a-workspace)):
 
-1. **[Access the FastPix Dashboard](https://dashboard.fastpix.io)**: Log in and navigate to the Workspaces section.
+1. **[Access the FastPix Dashboard](https://dashboard.fastpix.com/)**: Log in and navigate to the Workspaces section.
 2. **Locate Your Workspace Key**: Copy the Workspace Key for client-side monitoring. Include this key in your JavaScript code on every page where you want to track video performance.
 
 # Step 1: Installation and setup:
@@ -103,11 +103,11 @@ player.destroy(); //Destroys the Shaka Player
 player.fp.destroy(); //Ends FastPix tracking
 ```
 
-After successfully completing Step 3, you can track viewer metrics in the [FastPix dashboard](https://dashboard.fastpix.io) once playback ends. Steps 4, 5, and 6 are optional and can be utilized as needed to enhance your integration.
+After successfully completing Step 3, you can track viewer metrics in the [FastPix dashboard](https://dashboard.fastpix.com/) once playback ends. Steps 4, 5, and 6 are optional and can be utilized as needed to enhance your integration.
 
 # Step 4: Enhance Tracking with User Passable Metadata
 
-Check out the [user-passable metadata](https://docs.fastpix.io/docs/user-passable-metadata-1) documentation to see the metadata supported by FastPix. You can use custom metadata fields like `custom_1` to `custom_10` for your business logic, giving you the flexibility to pass any required values. Named attributes, such as `video_title` and `video_id`, can be passed directly as they are.
+Check out the [user-passable metadata](https://fastpix.com/docs/working-with-video-data/pass-custom-metadata-to-metrics) documentation to see the metadata supported by FastPix. You can use custom metadata fields like `custom_1` to `custom_10` for your business logic, giving you the flexibility to pass any required values. Named attributes, such as `video_title` and `video_id`, can be passed directly as they are.
 
 ```javascript
 import loadShakaPlayer from "@fastpix/video-data-shakaplayer";
@@ -226,4 +226,4 @@ player.fp.dispatch("videoChange", {
 ```
 
 # Detailed Usage:
-For more detailed steps and advanced usage, please refer to the official [FastPix Documentation](https://docs.fastpix.io/docs/monitor-shaka-player).
+For more detailed steps and advanced usage, please refer to the official [FastPix Documentation](https://fastpix.com/docs/web-players/monitor-the-shaka-player).
