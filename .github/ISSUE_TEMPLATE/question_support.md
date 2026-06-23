@@ -135,6 +135,6 @@ Before submitting, please ensure:
 **We'll do our best to help you get unstuck! 🚀**
 
 **For urgent issues, please also consider:**
-- [FastPix Documentation - Shaka Player](https://docs.fastpix.io/docs/monitor-shaka-player)
+- [FastPix Documentation - Shaka Player](https://fastpix.com/docs/web-players/monitor-the-shaka-player)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/fastpix)
-- [GitHub Discussions](https://github.com/FastPix/web-video-data-shakaplayer-sdk/discussions)
+- [GitHub Discussions](https://github.com/FastPix/web-video-data-shakaplayer-sdk/issues)
