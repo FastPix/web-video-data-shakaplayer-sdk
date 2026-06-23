@@ -39,7 +39,7 @@ Thank you for helping improve the FastPix Video Data SDK for Shaka Player docume
 - [ ] README.md
 - [ ] CHANGELOG.md
 - [ ] GitHub repository documentation
-- [ ] External documentation (docs.fastpix.io)
+- [ ] External documentation (https://fastpix.com/docs)
 - [ ] Code examples
 - [ ] Package.json description
 - [ ] Other: _______________
