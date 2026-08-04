@@ -1,229 +1,240 @@
-# Introduction
+# Real-time analytics for Shaka Player
 
-This SDK simplifies integration steps with [Shaka Player](https://github.com/shaka-project/shaka-player), enabling the collection of player analytics. It enables automatic tracking of video performance metrics, making the data readily available on the [FastPix dashboard](https://dashboard.fastpix.io) for monitoring and analysis. While the SDK is developed in TypeScript, the published npm package currently includes only the JavaScript output. TypeScript support, including type definitions, will be released in a future version.
+[![npm version](https://img.shields.io/npm/v/@fastpix/video-data-shakaplayer)](https://www.npmjs.com/package/@fastpix/video-data-shakaplayer)
+[![npm downloads](https://img.shields.io/npm/dm/@fastpix/video-data-shakaplayer)](https://www.npmjs.com/package/@fastpix/video-data-shakaplayer)
+[![Bundle size](https://img.shields.io/bundlephobia/minzip/@fastpix/video-data-shakaplayer)](https://bundlephobia.com/package/@fastpix/video-data-shakaplayer)
+[![License](https://img.shields.io/github/license/FastPix/shaka-player-analytics)](./LICENSE)
+[![Built with TypeScript](https://img.shields.io/badge/Built%20with-TypeScript-blue?logo=typescript)](https://www.typescriptlang.org/)
+<!-- [![CI](https://img.shields.io/github/actions/workflow/status/FastPix/shaka-player-analytics/ci.yml)](https://github.com/FastPix/shaka-player-analytics/actions) -->
 
-# Key Features:
+Monitor **Shaka Player** with real-time playback analytics. Track rebuffering, startup time, bitrate changes, playback errors, QoE metrics and viewer engagement for HLS and DASH streams, in a few lines of code, straight to the FastPix dashboard.
 
-- **Track Viewer Engagement:** Gain insights into how users interact with your videos.
-- **Monitor Playback Quality:** Ensure video streaming by monitoring real-time metrics, including bitrate, buffering, startup performance, render quality, and playback failure errors.
-- **Error Management:** Identify and resolve playback failures quickly with detailed error reports.
-- **Customizable Tracking:** Flexible configuration to match your specific monitoring needs.
-- **Centralized Dashboard:** Visualize and compare metrics on the [FastPix dashboard](https://dashboard.fastpix.io) to make data-driven decisions.
+**Works with:** Shaka Player · HLS · DASH · JavaScript · TypeScript · React · Next.js · Vite
 
-# Prerequisites:
+📖 **Docs:** https://fastpix.com/docs/video-data/monitors/the-shaka-player &nbsp;·&nbsp; 🚀 **Free account:** https://dashboard.fastpix.com/signup
+<!-- TODO: add a live demo URL here, or remove this line before publishing -->
 
-## Getting started with FastPix:
+![FastPix real-time Shaka Player analytics dashboard](docs/images/dashboard.png)
+*Real-time playback analytics on the FastPix dashboard.*
 
-To track and analyze video performance, initialize the FastPix Data SDK with your Workspace key (learn more about [Workspaces here](https://docs.fastpix.io/docs/workspaces)):
+---
 
-1. **[Access the FastPix Dashboard](https://dashboard.fastpix.io)**: Log in and navigate to the Workspaces section.
-2. **Locate Your Workspace Key**: Copy the Workspace Key for client-side monitoring. Include this key in your JavaScript code on every page where you want to track video performance.
+## Why FastPix?
 
-# Step 1: Installation and setup:
+- **Automatic instrumentation** - one integration call, no manual event wiring.
+- **Real-time QoE analytics** - rebuffering, startup time, bitrate, errors and watch time as playback happens.
+- **Playback diagnostics** - detailed error codes and context to resolve failures fast.
+- **Viewer engagement** - understand how people actually watch.
+- **One dashboard** - compare metrics across every player and platform in a single place.
 
-To get started with the SDK, install using npm or your favourite node package manager 😉:
+## What You Can Track with Shaka Player Analytics
+
+- Video startup / player-load latency
+- Rebuffering events and rebuffer ratio
+- Bitrate switches and adaptive-bitrate behavior
+- Playback failures with error codes
+- Viewer engagement and watch time
+- HLS playback analytics
+- DASH playback analytics
+- Custom metadata (`custom_1` to `custom_10`)
+- Privacy controls: cookie-free tracking and Do Not Track
+
+## Before you start
+
+You'll need:
+
+- A free FastPix account - [sign up](https://dashboard.fastpix.com/signup).
+- Your **Workspace key** from the dashboard (see [Workspaces](https://fastpix.com/docs/getting-started/set-up-a-workspace)). It identifies your workspace and is required.
+- Node.js and npm installed.
+- A working Shaka Player setup with an HTML5 `<video>` element. New to Shaka Player? See the [Shaka Player docs](https://github.com/shaka-project/shaka-player).
+
+If you have those, the Quickstart below is copy-paste ready.
+
+## Install the Shaka Player Analytics SDK
 
 ```bash
 npm i @fastpix/video-data-shakaplayer
 ```
 
-# Step 2: Import
+## How to Monitor Shaka Player Playback
+
+Grab your Workspace key from the [FastPix dashboard](https://dashboard.fastpix.com) (see [Workspaces](https://fastpix.com/docs/getting-started/set-up-a-workspace)), then bind the SDK to your Shaka Player instance:
 
 ```javascript
 import loadShakaPlayer from "@fastpix/video-data-shakaplayer";
-```
+import shaka from "shaka-player";
 
-# Step 3: Basic Integration
+// Capture the init timestamp for accurate startup metrics
+const initTime = loadShakaPlayer.utilityMethods.now();
 
-Ensure that the `workspace_id` is provided, as it is a mandatory field for FastPix integration, uniquely identifying your workspace. Install and import Shaka Player into your project, and create an HTML5 `<video>` element to bind it to.
+const videoElement = document.getElementById("video-player");
+const player = new shaka.Player(videoElement);
 
-Once the video element is set up, initialize the Shaka Player instance and associate it with the video element. Use the `loadShakaPlayer` function to pass the Shaka Player instance, player metadata, and the `shaka` instance, enabling FastPix to track playback data.
-
-Once the video URL is loaded and playback has started, the SDK will begin tracking the analytics.
-
-```javascript
-import loadShakaPlayer from "@fastpix/video-data-shakaplayer";
-import shaka from "shaka-player"; // Import Shaka Player
-
-// Initialize player setup
-const initTime = loadShakaPlayer.utilityMethods.now(); // Captures the exact timestamp of player initialization
-const videoElement = document.getElementById("video-player"); // Select the HTML5 video element for Shaka Player
-const player = new shaka.Player(videoElement); // Create a Shaka Player instance bound to the video element
-
-// Define player metadata
 const playerMetadata = {
-  workspace_id: "WORKSPACE_KEY", // Mandatory field for FastPix integration, replace with your actual workspace key
-  player_name: "PLAYER_NAME", // A unique identifier for this player instance (e.g., "MyVideoPlayer1")
-  player_init_time: initTime, // The timestamp when the player was initialized, useful for analytics
-  video_title: "VIDEO_TITLE", // The title of the video being played (e.g., "My Amazing Video")
-  video_id: "VIDEO_ID", // Unique identifier for the video (e.g., from your CMS or database)
-  viewer_id: "VIEWER_ID", // Unique identifier for the viewer
-
-  // Additional metadata
+  workspace_id: "WORKSPACE_KEY", // required - from your FastPix dashboard
+  player_name: "Main Player",
+  player_init_time: initTime,
+  video_title: "My Video",
+  video_id: "video-id",
+  viewer_id: "viewer-id",
 };
 
-// Configure FastPix data integration
-const fastPixShakaIntegration = loadShakaPlayer(
-  player, // The Shaka Player instance managing playback
-  {
-    debug: false, // Optional flag; set to true to enable debug logs for troubleshooting
-    data: playerMetadata,
-  },
-  shaka, // Pass the imported Shaka Player instance for proper integration
+const fastPixShaka = loadShakaPlayer(
+  player,
+  { debug: false, data: playerMetadata },
+  shaka
 );
 
-// Load the video content
-const videoUrl =
-  "https://stream.fastpix.io/027a90e4-f5e2-433d-81e5-b99ee864c3f6.m3u8"; // Replace with your video manifest URL
-
 player
-  .load(videoUrl) // Load the video manifest URL into the Shaka Player
-  .then(() => {
-    // Successfully loaded the manifest; FastPix will now begin tracking playback data
-    console.log("Video manifest loaded successfully.");
-  })
-  .catch((error) => {
-    // Handle errors that occur while loading the video manifest
-    fastPixShakaIntegration.handleLoadError(error); // Notify FastPix of the error
-    console.error("Error loading video manifest:", error); // Log the error for debugging
-  });
-
-// Use these methods to destroy fastpix data sdk and shakaplayer:
-
-// player.destroy() - Destroys the Shaka Player
-// player.fp.destroy() - Ends FastPix tracking
+  .load("https://stream.fastpix.com/<your-stream>.m3u8")
+  .then(() => console.log("Manifest loaded - FastPix is now tracking playback."))
+  .catch((error) => fastPixShaka.handleLoadError(error));
 ```
 
-### Note:
+That's it. Once playback starts, metrics appear on the [FastPix dashboard](https://dashboard.fastpix.com).
 
-To ensure proper cleanup of both Shaka Player and FastPix data tracking, you must call player.fp.destroy() before player.destroy() when destroying the Shaka Player instance.
+**Cleanup:** call `player.fp.destroy()` **before** `player.destroy()` so FastPix tracking is torn down first:
 
 ```javascript
-player.destroy(); //Destroys the Shaka Player
-player.fp.destroy(); //Ends FastPix tracking
+player.fp.destroy(); // ends FastPix tracking
+player.destroy();    // destroys the Shaka Player
 ```
 
-After successfully completing Step 3, you can track viewer metrics in the [FastPix dashboard](https://dashboard.fastpix.io) once playback ends. Steps 4, 5, and 6 are optional and can be utilized as needed to enhance your integration.
+## Track Custom Metadata and Video Metrics
 
-# Step 4: Enhance Tracking with User Passable Metadata
-
-Check out the [user-passable metadata](https://docs.fastpix.io/docs/user-passable-metadata-1) documentation to see the metadata supported by FastPix. You can use custom metadata fields like `custom_1` to `custom_10` for your business logic, giving you the flexibility to pass any required values. Named attributes, such as `video_title` and `video_id`, can be passed directly as they are.
+Pass named fields (`video_title`, `video_id`, `video_content_type`, `video_stream_type`) directly, and use `custom_1` to `custom_10` for your own business logic. See the [user-passable metadata](https://fastpix.com/docs/video-data/pass-custom-metadata-to-metrics) reference.
 
 ```javascript
-import loadShakaPlayer from "@fastpix/video-data-shakaplayer";
-import shaka from "shaka-player"; // Import Shaka Player
-
-// Initialize player setup
-const initTime = loadShakaPlayer.utilityMethods.now(); // Captures the exact timestamp of player initialization
-const videoElement = document.getElementById("video-player"); // Select the HTML5 video element for Shaka Player
-const player = new shaka.Player(videoElement); // Create a Shaka Player instance bound to the video element
-
-// Define player metadata
 const playerMetadata = {
-  workspace_id: "WORKSPACE_KEY", // Unique key to identify your workspace (replace with your actual workspace key)
-  player_name: "Main Video Player", // A custom name or identifier for this video player instance
-  player_init_time: initializationTime, // Timestamp of when the player was initialized (useful for tracking performance metrics)
-  video_title: "Test Content", // Title of the video being played (replace with the actual title of your video)
-  video_id: "f01a98s76t90p88i67x", // A unique identifier for the video (replace with your actual video ID for tracking purposes)
-  viewer_id: "user12345", // A unique identifier for the viewer (e.g., user ID, session ID, or any other unique value)
-  video_content_type: "series", // Type of content being played (e.g., series, movie, etc.)
-  video_stream_type: "on-demand", // Type of streaming (e.g., live, on-demand)
-
-  // Custom fields for additional business logic
-  custom_1: "", // Use this field to pass any additional data needed for your specific business logic
-  custom_2: "", // Use this field to pass any additional data needed for your specific business logic
-
-  // Add any additional metadata
+  workspace_id: "WORKSPACE_KEY",
+  video_title: "Test Content",
+  video_id: "f01a98s76t90p88i67x",
+  viewer_id: "user12345",
+  video_content_type: "series",
+  video_stream_type: "on-demand",
+  custom_1: "campaign-42",
+  custom_2: "team-sports",
 };
-
-// Configure FastPix data integration
-const fastPixShakaIntegration = loadShakaPlayer(
-  player, // The Shaka Player instance managing playback
-  {
-    debug: false, // Optional flag; set to true to enable debug logs for troubleshooting
-    data: playerMetadata,
-  },
-  shaka, // Pass the imported Shaka Player instance for proper integration
-);
-
-// Load the video content
-const videoUrl =
-  "https://stream.fastpix.io/027a90e4-f5e2-433d-81e5-b99ee864c3f6.m3u8"; // Replace with your video manifest URL
-
-player
-  .load(videoUrl) // Load the video manifest URL into the Shaka Player
-  .then(() => {
-    // Successfully loaded the manifest; FastPix will now begin tracking playback data
-    console.log("Video manifest loaded successfully.");
-  })
-  .catch((error) => {
-    // Handle errors that occur while loading the video manifest
-    fastPixShakaIntegration.handleLoadError(error); // Notify FastPix of the error
-    console.error("Error loading video manifest:", error); // Log the error for debugging
-  });
 ```
 
-### Note:
+Keep metadata consistent across video loads so comparisons in the dashboard stay clean.
 
-Keep metadata consistent across different video loads to make comparison easier in your analytics dashboard.
+## Configure Privacy, Cookies and Error Tracking
 
-# Step 5: Advanced Customization with FastPix Data SDK
-
-| Attribute                | Description                                                                                                                                                                                                                                                                                                                                                  | Type    | Example Usage                   |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------------------------------- |
-| `disableCookies`         | FastPix Data SDK uses cookies by default to track playback across page views and to identify unique viewers. If your application is not intended to collect cookies, you can disable this feature by setting `disableCookies: true`. This ensures that no cookies are set during the user's session, enhancing privacy and compliance with user preferences. | Boolean | `disableCookies: true`          |
-| `respectDoNotTrack`      | Set to true to honor users' privacy preferences regarding the 'Do Not Track' setting.                                                                                                                                                                                                                                                                        | Boolean | `respectDoNotTrack: true`       |
-| `automaticErrorTracking` | FastPix automatically tracks errors that occur during playback failures. To disable this feature, set `automaticErrorTracking` to false. This allows you to have more control over errors which are considered fatal and helps you manage error reporting according to your application's needs.                                                             | Boolean | `automaticErrorTracking: false` |
-| `debug`                  | Set to true to enable debug logs in the console for troubleshooting purposes.                                                                                                                                                                                                                                                                                | Boolean | `debug: true`                   |
+| Option | What it does | Type | Example |
+|---|---|---|---|
+| `disableCookies` | Track without setting cookies for sessions / unique viewers | Boolean | `disableCookies: true` |
+| `respectDoNotTrack` | Honor the browser "Do Not Track" setting | Boolean | `respectDoNotTrack: true` |
+| `automaticErrorTracking` | Auto-track playback failures (disable for manual control) | Boolean | `automaticErrorTracking: false` |
+| `debug` | Print debug logs to the console | Boolean | `debug: true` |
 
 ```javascript
-// player is the instance returned by `new shaka.Player`
-const fastPixShakaIntegration = loadShakaPlayer(
-  player, // The Shaka Player instance managing playback
+const fastPixShaka = loadShakaPlayer(
+  player,
   {
-    debug: false, // Optional flag; set to true to enable debug logs for troubleshooting
-    disableCookies: true, // Set to true to disable cookies for tracking sessions and unique viewers
-    respectDoNotTrack: true, // Set to true to honor users' 'Do Not Track' preferences
-    automaticErrorTracking: false, // Set to false to disable automatic tracking of fatal errors
-    data: {
-      workspace_id: "WORKSPACE_KEY", // Mandatory field for FastPix integration, replace with your actual workspace key
-
-      // Additional metadata
-    },
+    debug: false,
+    disableCookies: true,
+    respectDoNotTrack: true,
+    automaticErrorTracking: false,
+    data: { workspace_id: "WORKSPACE_KEY" },
   },
-  shaka, // Pass the imported Shaka Player instance
+  shaka
 );
 ```
 
-# Step 6: Emit Custom Events
+## Track Buffering, Errors and Stream Changes
 
-### Advanced Error Reporting and Contextual Tracking
-
-By default, FastPix tracks errors that occur during playback failures. However, you can also emit a custom error event for non-severe issues that arise outside of these failures, allowing you to provide additional context for tracking purposes.
+Emit a custom error for non-fatal issues:
 
 ```javascript
-// player is the instance returned by `new shaka.Player`
 player.fp.dispatch("error", {
-  player_error_code: 1008, // Custom error code
-  player_error_message: "Description of error", // Generalized error message
-  player_error_context: "Additional context for the error", // Instance-specific information
+  player_error_code: 1008,
+  player_error_message: "Description of error",
+  player_error_context: "Additional context",
 });
 ```
 
-### Changing video streams in player
-
-When your application plays multiple videos back-to-back in the same player, it’s essential to notify the FastPix SDK whenever a new video starts; possibly in scenarios like playlist content/ video series or any other video that user wants to play.
+When the same player plays a new video (playlists, series), tell the SDK so metrics don't merge:
 
 ```javascript
-// player is the instance returned by `new shaka.Player`
 player.fp.dispatch("videoChange", {
-  video_id: "abc345", // Unique identifier for the new video
-  video_title: "My Other Great Video", // Title of the new video
-  video_series: "Weekly Great Videos", // Series name if applicable
-
-  // ... and other metadata
+  video_id: "abc345",
+  video_title: "My Other Great Video",
+  video_series: "Weekly Great Videos",
 });
 ```
 
-# Detailed Usage:
-For more detailed steps and advanced usage, please refer to the official [FastPix Documentation](https://docs.fastpix.io/docs/monitor-shaka-player).
+## Monitor HLS and DASH Playback Analytics
+
+Shaka Player plays both HLS (`.m3u8`) and DASH (`.mpd`) natively. The SDK tracks either one automatically - just load the manifest as usual; no extra configuration is needed. Rebuffering, bitrate and startup metrics are collected the same way for both formats.
+
+## Framework Examples (JavaScript, TypeScript, React, Next.js, Vite)
+
+Runnable integrations live in [`examples/`](./examples):
+
+- [JavaScript](./examples/javascript)
+- [TypeScript](./examples/typescript)
+- [React](./examples/react)
+- [Next.js](./examples/nextjs)
+- [Vite](./examples/vite)
+
+## Which FastPix Analytics SDK for Which Player
+
+Using a different player? FastPix has an analytics SDK for each. (HLS.js and Dash.js are covered by the HTML5 core SDK - there is no separate repo for them.)
+
+| Player / framework | FastPix analytics SDK |
+|---|---|
+| Shaka Player | **This repo** |
+| Video.js | [web-videojs-data-monitoring](https://github.com/FastPix/web-videojs-data-monitoring) |
+| HTML5 `<video>` / HLS.js / Dash.js | [web-video-data-core-sdk](https://github.com/FastPix/web-video-data-core-sdk) |
+| Android (ExoPlayer) | [android-data-exoplayer-sdk](https://github.com/FastPix/android-data-exoplayer-sdk) |
+| Android (Media3) | [android-data-androidXmedia3](https://github.com/FastPix/android-data-androidXmedia3) |
+| iOS (AVPlayer) | [iOS-data-avplayer-sdk](https://github.com/FastPix/iOS-data-avplayer-sdk) |
+| Flutter | [flutter-core-data-sdk](https://github.com/FastPix/flutter-core-data-sdk) |
+| React Native | [react-native-video-data](https://github.com/FastPix/react-native-video-data) |
+| Roku | [Roku-data-core-SDK](https://github.com/FastPix/Roku-data-core-SDK) |
+
+## FAQ
+
+**How do I track rebuffering and QoE in Shaka Player?**
+Install `@fastpix/video-data-shakaplayer`, then pass your Shaka Player instance to `loadShakaPlayer(player, { data: { workspace_id } }, shaka)`. Rebuffering, startup time, bitrate and other QoE metrics are collected automatically and shown on the FastPix dashboard.
+
+**How do I collect playback analytics from Shaka Player?**
+The SDK instruments the player for you. After the integration call and `player.load(...)`, metrics start flowing once playback begins.
+
+**How do I measure buffering and startup time?**
+Both are tracked automatically. Startup time is most accurate when you set `player_init_time` using `loadShakaPlayer.utilityMethods.now()` at init, as shown in the quickstart.
+
+**Does it support HLS and DASH?**
+Yes. Shaka Player handles both, and the SDK tracks either format with no extra setup.
+
+**Does it work with React, Next.js or Vite?**
+Yes - see the [examples](./examples) folder for each.
+
+**Does it support TypeScript?**
+The SDK is written in TypeScript. The published package currently ships JavaScript output; type definitions are planned for a future release.
+
+**Can I send custom metadata?**
+Yes - use `custom_1` to `custom_10` plus the named fields. See [user-passable metadata](https://fastpix.com/docs/video-data/pass-custom-metadata-to-metrics).
+
+**How do I stop tracking / clean up?**
+Call `player.fp.destroy()` before `player.destroy()`.
+
+## Troubleshooting Shaka Player Analytics
+
+- **No data on the dashboard?** Confirm `workspace_id` is set and correct, and that playback actually started (`player.load(...)` resolved).
+- **Errors on load?** Route them through `fastPixShaka.handleLoadError(error)` in your `.catch` so failures are reported.
+- **Metrics look merged across videos?** Emit `player.fp.dispatch("videoChange", { ... })` when a new video starts in the same player.
+- **Need more detail?** Set `debug: true` to see SDK logs in the console.
+
+## Documentation
+
+Full guide: https://fastpix.com/docs/video-data/monitors/the-shaka-player
+
+## Contributing
+
+Contributions are welcome - see [CONTRIBUTING.md](./CONTRIBUTING.md). If this SDK helps you, a ⭐ on the repo helps others find it.
+
+## License
+
+MIT - see [LICENSE](./LICENSE).
