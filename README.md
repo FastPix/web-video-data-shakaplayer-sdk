@@ -22,6 +22,8 @@ The SDK is written in TypeScript; the published npm package currently ships Java
 - **Customizable tracking** - flexible configuration to match your monitoring needs.
 - **Centralized dashboard** - visualize and compare metrics on the FastPix dashboard to make data-driven decisions.
 
+<br />
+
 ## What you can track with Shaka Player analytics
 
 - Viewer engagement and watch behavior
@@ -35,7 +37,9 @@ The SDK is written in TypeScript; the published npm package currently ships Java
 - Custom metadata (`custom_1` to `custom_10`)
 - Privacy controls: cookie-free tracking and Do Not Track
 
-## Before you start
+<br />
+
+## Before you begin
 
 You'll need:
 
@@ -44,6 +48,8 @@ You'll need:
 - Node.js and npm.
 - A working Shaka Player setup with an HTML5 `<video>` element. New to Shaka Player? See the [Shaka Player project](https://github.com/shaka-project/shaka-player).
 
+<br />
+
 ## Install the Shaka Player analytics SDK
 
 To get started with the SDK, install it using npm or your favourite Node package manager:
@@ -51,6 +57,8 @@ To get started with the SDK, install it using npm or your favourite Node package
 ```bash
 npm i @fastpix/video-data-shakaplayer
 ```
+
+<br />
 
 ## How to monitor Shaka Player playback
 
@@ -115,6 +123,8 @@ player
 // player.fp.destroy() - Ends FastPix tracking
 ```
 
+<br />
+
 ### Cleanup
 
 To ensure proper cleanup of both Shaka Player and FastPix data tracking, you must call player.fp.destroy() before player.destroy() when destroying the Shaka Player instance.
@@ -125,6 +135,8 @@ player.fp.destroy(); //Ends FastPix tracking
 ```
 
 After completing the steps above, you can track viewer metrics in the [FastPix dashboard](https://dashboard.fastpix.com) once playback ends. The sections below are optional and can be used as needed to enhance your integration.
+
+<br />
 
 ## Track custom metadata and video metrics
 
@@ -186,6 +198,8 @@ player
 
 Keep metadata consistent across different video loads to make comparison easier in your analytics dashboard.
 
+<br />
+
 ## Configure privacy, cookies and error tracking
 
 | Attribute                | Description                                                                                                                                                                                                                                                                                                                                                  | Type    | Example Usage                   |
@@ -214,6 +228,8 @@ const fastPixShakaIntegration = loadShakaPlayer(
 );
 ```
 
+<br />
+
 ## Track buffering, errors and stream changes
 
 By default, FastPix tracks errors that occur during playback failures. You can also emit a custom error event for non-severe issues that arise outside of these failures, to provide additional context for tracking purposes.
@@ -240,6 +256,8 @@ player.fp.dispatch("videoChange", {
 });
 ```
 
+<br />
+
 ## Monitor HLS and DASH playback analytics
 
 Shaka Player plays both HLS (`.m3u8`) and DASH (`.mpd`) natively, and the SDK tracks either format automatically. Load the manifest as usual - no extra configuration is needed - and rebuffering, bitrate and startup metrics are collected the same way for both.
@@ -261,35 +279,59 @@ Using a different player? FastPix has an analytics SDK for each. (Only repositor
 
 More SDKs are available in the [FastPix organization](https://github.com/orgs/FastPix/repositories).
 
+<br />
+
 ## FAQ
 
 **How do I track rebuffering and QoE in Shaka Player?**
+
 Install `@fastpix/video-data-shakaplayer` and pass your Shaka Player instance to `loadShakaPlayer` with your `workspace_id`, as shown in "How to monitor Shaka Player playback." Rebuffering, startup time, bitrate and other quality metrics are then collected automatically and shown on the FastPix dashboard.
 
 **How do I collect playback analytics from Shaka Player?**
+
 The SDK instruments the player for you. After the integration call and `player.load(...)`, metrics start flowing once playback begins.
 
 **Does it support HLS and DASH?**
+
 Yes. Shaka Player handles both, and the SDK tracks either format with no extra setup.
 
 **Does it work with React, Next.js or other frameworks?**
+
 Yes. It is a JavaScript SDK, so it works in any framework - initialize it where you create your Shaka Player instance.
 
 **Does it support TypeScript?**
+
 The SDK is written in TypeScript. The published package currently ships JavaScript output; type definitions are planned for a future release.
 
 **Can I send custom metadata?**
+
 Yes - use the named fields plus `custom_1` to `custom_10`. See "Track custom metadata and video metrics."
 
 **How do I stop tracking and clean up?**
+
 Call `player.fp.destroy()` before `player.destroy()`, as described in "Cleanup."
+
+<br />
 
 ## Troubleshooting Shaka Player analytics
 
-- **No data on the dashboard?** Confirm your `workspace_id` is set and correct, and that playback actually started (`player.load(...)` resolved).
-- **Errors on load?** Route them through `fastPixShakaIntegration.handleLoadError(error)` in your `.catch` so failures are reported.
-- **Metrics look merged across videos?** Emit a `videoChange` event when a new video starts in the same player, as shown above.
-- **Need more detail?** Set `debug: true` to see SDK logs in the console.
+- **No data on the dashboard?**
+
+  Confirm your `workspace_id` is set and correct, and that playback actually started (`player.load(...)` resolved).
+
+- **Errors on load?**
+
+  Route them through `fastPixShakaIntegration.handleLoadError(error)` in your `.catch` so failures are reported.
+
+- **Metrics look merged across videos?**
+
+  Emit a `videoChange` event when a new video starts in the same player, as shown above.
+
+- **Need more detail?**
+
+  Set `debug: true` to see SDK logs in the console.
+
+<br />
 
 ## Documentation
 
@@ -301,4 +343,4 @@ Questions or issues? Open a [GitHub issue](https://github.com/FastPix/web-video-
 
 ## License
 
-MIT
+[MIT](https://github.com/FastPix/web-video-data-shakaplayer-sdk/blob/698b724b07a3fff766514aafe23f9568bf7fdded/LICENSE)
