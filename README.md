@@ -46,7 +46,7 @@ The SDK is written in TypeScript; the published npm package currently ships Java
 You'll need:
 
 - A free FastPix account - [sign up](https://dashboard.fastpix.com).
-- Your **Workspace id** from the dashboard (learn more about [Workspaces](https://fastpix.com/docs/getting-started/set-up-a-workspace)). It uniquely identifies your workspace and is required.
+- Your **Workspace Key** from the dashboard (learn more about [Workspaces](https://fastpix.com/docs/getting-started/set-up-a-workspace#creating-new-workspace)). It uniquely identifies your workspace and is required.
 - Node.js and npm.
 - A working Shaka Player setup with an HTML5 `<video>` element. New to Shaka Player? See the [Shaka Player project](https://github.com/shaka-project/shaka-player).
 
@@ -133,7 +133,7 @@ Import the SDK:
 import loadShakaPlayer from "@fastpix/video-data-shakaplayer";
 ```
 
-Provide the `workspace_id` (a mandatory field that identifies your workspace). Initialize the Shaka Player instance, bind it to an HTML5 `<video>` element, then use `loadShakaPlayer` to pass the player, the player metadata and the `shaka` instance so FastPix can track playback. Once the video URL loads and playback starts, the SDK begins tracking analytics.
+Provide the [`workspace_id`](https://fastpix.com/docs/getting-started/set-up-a-workspace#creating-new-workspace) (a mandatory field that identifies your workspace; use your Workspace Key). Initialize the Shaka Player instance, bind it to an HTML5 `<video>` element, then use `loadShakaPlayer` to pass the player, the player metadata and the `shaka` instance so FastPix can track playback. Once the video URL loads and playback starts, the SDK begins tracking analytics.
 
 ```javascript
 import loadShakaPlayer from "@fastpix/video-data-shakaplayer";
@@ -146,7 +146,7 @@ const player = new shaka.Player(videoElement); // Create a Shaka Player instance
 
 // Define player metadata
 const playerMetadata = {
-  workspace_id: "YOUR_WORKSPACE_ID", // Mandatory field for FastPix integration, replace with your actual workspace id
+  workspace_id: "WORKSPACE_KEY", // Your Workspace Key (create one: https://fastpix.com/docs/getting-started/set-up-a-workspace#creating-new-workspace)
   player_name: "PLAYER_NAME", // A unique identifier for this player instance (e.g., "MyVideoPlayer1")
   player_init_time: initTime, // The timestamp when the player was initialized, useful for analytics
   video_title: "VIDEO_TITLE", // The title of the video being played (e.g., "My Amazing Video")
@@ -188,7 +188,7 @@ player
 // player.fp.destroy() - Ends FastPix tracking
 ```
 
-<br />
+**Where these values come from:** only `workspace_id` comes from FastPix - it's your [Workspace Key](https://fastpix.com/docs/getting-started/set-up-a-workspace#creating-new-workspace) from the dashboard. The other fields describe your content and viewer, so populate them from your own application: `video_title` and `video_id` from your CMS or database, `viewer_id` from your auth or session layer (use an internal ID, not personal data), and `player_name` a label you choose for this player. `player_init_time` is set automatically by `loadShakaPlayer.utilityMethods.now()` - leave it as-is. If you're just trying the SDK out, any placeholder values work; they'll simply appear as-is on the dashboard.
 
 <br />
 
@@ -240,7 +240,7 @@ const player = new shaka.Player(videoElement); // Create a Shaka Player instance
 
 // Define player metadata
 const playerMetadata = {
-  workspace_id: "WORKSPACE_ID", // Unique key to identify your workspace (replace with your actual workspace key)
+  workspace_id: "WORKSPACE_KEY", // Your Workspace Key (create one: https://fastpix.com/docs/getting-started/set-up-a-workspace#creating-new-workspace)
   player_name: "Main Video Player", // A custom name or identifier for this video player instance
   player_init_time: initializationTime, // Timestamp of when the player was initialized (useful for tracking performance metrics)
   video_title: "Test Content", // Title of the video being played (replace with the actual title of your video)
@@ -287,8 +287,6 @@ Keep metadata consistent across different video loads to make comparison easier 
 
 <br />
 
-<br />
-
 ## Configure privacy, cookies and error tracking
 
 | Attribute                | Description                                                                                                                                                                                                                                                                                                                                                  | Type    | Example Usage                   |
@@ -308,7 +306,7 @@ const fastPixShakaIntegration = loadShakaPlayer(
     respectDoNotTrack: true, // Set to true to honor users' 'Do Not Track' preferences
     automaticErrorTracking: false, // Set to false to disable automatic tracking of fatal errors
     data: {
-      workspace_id: "WORKSPACE_ID", // Mandatory field for FastPix integration, replace with your actual workspace id
+      workspace_id: "WORKSPACE_KEY", // Your Workspace Key (create one: https://fastpix.com/docs/getting-started/set-up-a-workspace#creating-new-workspace)
 
       // Additional metadata
     },
@@ -316,8 +314,6 @@ const fastPixShakaIntegration = loadShakaPlayer(
   shaka, // Pass the imported Shaka Player instance
 );
 ```
-
-<br />
 
 <br />
 
@@ -355,8 +351,6 @@ player.fp.dispatch("videoChange", {
 
 <br />
 
-<br />
-
 ## Monitor HLS and DASH playback analytics
 
 Shaka Player plays both HLS (`.m3u8`) and DASH (`.mpd`) natively, and the SDK tracks either format automatically. Load the manifest as usual - no extra configuration is needed - and rebuffering, bitrate and startup metrics are collected the same way for both.
@@ -382,8 +376,6 @@ More SDKs are available in the [FastPix organization](https://github.com/orgs/Fa
 
 <br />
 
-<br />
-
 ## FAQ
 
 **How do I track rebuffering and QoE in Shaka Player?**
@@ -391,7 +383,6 @@ More SDKs are available in the [FastPix organization](https://github.com/orgs/Fa
 Install `@fastpix/video-data-shakaplayer` and pass your Shaka Player instance to `loadShakaPlayer` with your `workspace_id`, as shown in [How to monitor Shaka Player playback](#how-to-monitor-shaka-player-playback). Rebuffering, startup time, bitrate and other quality metrics are then collected automatically and shown on the FastPix dashboard.
 
 **How do I collect playback analytics from Shaka Player?**
-
 
 The SDK instruments the player for you. After the integration call and `player.load(...)`, metrics start flowing once playback begins.
 
@@ -401,11 +392,9 @@ Yes. Shaka Player handles both, and the SDK tracks either format with no extra s
 
 **Does it work with React, Next.js or other frameworks?**
 
-
 Yes. It is a JavaScript SDK, so it works in any framework - initialize it where you create your Shaka Player instance.
 
 **Does it support TypeScript?**
-
 
 The SDK is written in TypeScript. The published package currently ships JavaScript output; type definitions are planned for a future release.
 
