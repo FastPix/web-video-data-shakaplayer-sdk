@@ -166,7 +166,7 @@ const fastPixShakaIntegration = loadShakaPlayer(
 
 // Load the video content
 const videoUrl =
-  "https://stream.fastpix.io/027a90e4-f5e2-433d-81e5-b99ee864c3f6.m3u8"; // Replace this sample URL with your own publicly accessible HLS or DASH manifest URL.
+  "https://stream.fastpix.io/027a90e4-f5e2-433d-81e5-b99ee864c3f6.m3u8"; // Replace this sample URL with your HLS or DASH manifest URL.
 
 player
   .load(videoUrl) // Load the video manifest URL into the Shaka Player
