@@ -10,7 +10,7 @@ Add real-time playback analytics to **Shaka Player**. This SDK plugs FastPix int
 
 The SDK is written in TypeScript; the published npm package currently ships JavaScript output, and type definitions are planned for a future release.
 
-**Works with:** Shaka Player · HLS · DASH · JavaScript (any framework)
+**Works with:** Shaka Player · JavaScript (any framework)
 
 📖 **Docs:** https://fastpix.com/docs/video-data/monitors/the-shaka-player &nbsp;·&nbsp; 🚀 **Free account:** https://dashboard.fastpix.com
 
@@ -34,14 +34,12 @@ The SDK is written in TypeScript; the published npm package currently ships Java
 - Bitrate and adaptive-bitrate changes
 - Render quality
 - Playback failures and error codes
-- HLS playback analytics
-- DASH playback analytics
 - Custom metadata (`custom_1` to `custom_10`)
 - Privacy controls: cookie-free tracking and Do Not Track
 
 <br />
 
-## Before you start
+## Before you begin
 
 You'll need:
 
@@ -368,9 +366,7 @@ Using a different player? FastPix has an analytics SDK for each. (Only repositor
 | HTML5 `<video>` (core web) | [web-video-data-core-sdk](https://github.com/FastPix/web-video-data-core-sdk) |
 | Android (ExoPlayer) | [android-data-exoplayer-sdk](https://github.com/FastPix/android-data-exoplayer-sdk) |
 | Android (Media3) | [android-data-androidXmedia3](https://github.com/FastPix/android-data-androidXmedia3) |
-| Android (core) | [android-core-data-sdk](https://github.com/FastPix/android-core-data-sdk) |
 | iOS (AVPlayer) | [iOS-data-avplayer-sdk](https://github.com/FastPix/iOS-data-avplayer-sdk) |
-| iOS (core) | [iOS-core-data-sdk](https://github.com/FastPix/iOS-core-data-sdk) |
 
 More SDKs are available in the [FastPix organization](https://github.com/orgs/FastPix/repositories).
 
