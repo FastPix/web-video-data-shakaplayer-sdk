@@ -364,7 +364,7 @@ Using a different player? FastPix has an analytics SDK for each. (Only repositor
 | Shaka Player | **This repo** |
 | Video.js | [web-videojs-data-monitoring](https://github.com/FastPix/web-videojs-data-monitoring) |
 | hls.js | [HLS](https://github.com/FastPix/web-video-data-core-sdk) |
-| dash.js | [HLS](https://github.com/FastPix/web-video-data-core-sdk) |
+| dash.js | [Dash](https://github.com/FastPix/web-video-data-core-sdk) |
 | Android (ExoPlayer) | [android-data-exoplayer-sdk](https://github.com/FastPix/android-data-exoplayer-sdk) |
 | Android (Media3) | [android-data-androidXmedia3](https://github.com/FastPix/android-data-androidXmedia3) |
 | iOS (AVPlayer) | [iOS-data-avplayer-sdk](https://github.com/FastPix/iOS-data-avplayer-sdk) |
