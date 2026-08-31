@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FastPix Data SDK + Shaka Player — HTML5 examples</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 3rem auto; padding: 0 1rem; line-height: 1.5; }
+    a { color: #1a56db; }
+    li { margin: 0.4rem 0; }
+    code { background: #f2f2f2; padding: 0.1rem 0.3rem; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>FastPix Data SDK + Shaka Player</h1>
+  <p>Plain HTML5 examples, no bundler. Each page loads Shaka Player from a CDN and the FastPix
+     Shaka SDK from the local repo build (<code>../../dist/index.js</code>).</p>
+  <ul>
+    <li><a href="hls.html">hls.html</a> — HLS (.m3u8) stream tracked with FastPix</li>
+    <li><a href="dash.html">dash.html</a> — DASH (.mpd) stream tracked with FastPix</li>
+  </ul>
+  <p><strong>Serve from the repo root</strong> so <code>../../dist/index.js</code> resolves:</p>
+  <pre><code>npm run build   # produces dist/index.js
+npx serve .     # then open /examples/html5-demo/</code></pre>
+  <p>Set your Workspace Key (<code>workspace_id</code>) in each page — get one from
+     <a href="https://dashboard.fastpix.com">dashboard.fastpix.com</a>.</p>
+</body>
+</html>

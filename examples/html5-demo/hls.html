@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shaka Player + FastPix — HLS</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    video { width: 100%; max-height: 70vh; background: #111; }
+    .hint { color: #444; font-size: 0.9rem; }
+    button { padding: 0.5rem 1rem; cursor: pointer; margin-right: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Shaka Player + FastPix — HLS</h1>
+  <p class="hint">Set <code>workspace_id</code> below to your Workspace Key. Open the console with
+     <code>debug: true</code> to watch events. Shaka plays HLS via MSE in all modern browsers.</p>
+  <video id="video-player" controls playsinline crossorigin="anonymous"></video>
+  <p><button id="destroy-btn" type="button">Destroy (stop tracking)</button></p>
+
+  <!-- Shaka Player from CDN. FastPix Shaka SDK from the local repo build (exposes window.loadShakaPlayer). -->
+  <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.12.7/dist/shaka-player.compiled.js"></script>
+  <script src="../../dist/index.js"></script>
+  <script>
+    (function () {
+      var shaka = globalThis.shaka;
+      var STREAM_URL = "https://stream.fastpix.com/7c8d5087-edf7-462f-a1b3-e2fbd30747fa.m3u8";
+      var player = null;
+
+      function destroyPlayer() {
+        if (!player) return;
+        // Order matters: end FastPix tracking BEFORE disposing the player.
+        if (player.fp) player.fp.destroy();
+        player.destroy();
+        player = null;
+        console.log("Player destroyed; FastPix monitoring stopped.");
+      }
+
+      function init() {
+        shaka.polyfill.installAll();
+        if (!shaka.Player.isBrowserSupported()) {
+          console.error("This browser is not supported by Shaka Player.");
+          return;
+        }
+
+        var video = document.getElementById("video-player");
+        var initTime = loadShakaPlayer.utilityMethods.now();
+        player = new shaka.Player(video);
+
+        var integration = loadShakaPlayer(
+          player,
+          {
+            debug: true,
+            data: {
+              workspace_id: "WORKSPACE_KEY", // <-- get yours from dashboard.fastpix.com
+              player_name: "html5-shaka-hls",
+              player_init_time: initTime,
+              video_title: "FastPix sample (HLS)",
+              video_id: "sample-hls-001",
+            },
+          },
+          shaka, // pass the shaka namespace so error codes resolve to readable names
+        );
+
+        player.load(STREAM_URL).catch(function (err) {
+          integration.handleLoadError(err);
+          console.error("Error loading manifest:", err);
+        });
+      }
+
+      document.getElementById("destroy-btn").addEventListener("click", destroyPlayer);
+      window.addEventListener("beforeunload", destroyPlayer);
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
