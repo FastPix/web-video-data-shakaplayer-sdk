@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.7]
+
+> Requires `@fastpix/video-data-core` **1.1.0 or newer**. The player state reader
+> calls `buildRenditionName`, `observeViewability`, `identifyStreamingProtocol`
+> and `measureBufferLength` from `utilityMethods`
+> data is collected, so the dependency range must be raised before publishing.
+
+### Added
+- **Complete rendition reporting** - `video_source_width`, `video_source_height`, `video_source_audio_codec`, `video_source_audio_bitrate`, `video_source_dynamic_range_type` and `video_source_rendition_name` alongside the bitrate, codec and frame rate already sent. Every field is read from the one active variant track, so a beacon can never pair one rendition's bitrate with another's resolution. This also switches on the counters the core derives from them: `view_rendition_upshift_count`, `view_rendition_downshift_count`, `video_source_bitrate_shift`, the `view_initial_*` set and the upscale/downscale percentages.
+- **Player state fields** - `video_source_stream_protocol`, `video_source_buffer_length`, `player_program_date_time`, `player_viewable_on` and `player_viewable_percentage`.
+- **Ad tracking** - one subscription to Shaka's advertisement manager covers HLS and DASH interstitials, client-side IMA, server-side DAI and AWS MediaTailor. Reports break identity, position and duration, per-advertisement identity, index, duration and serving host, impressions, attempt and error counters, and preroll request and load timing. Needs **Shaka 4.10 or newer**; interstitials did not exist before then, so on an older build no advertisement event is raised and the fields stay absent.
+- **Pass-through metadata** - the core's full set is now reachable from this adapter, including `application_name`, `page_type`, the three `viewer_plan*` fields, the `video_*` title fields, DRM level, CDN edge and origin, and the captions and picture-in-picture capability flags. All optional; an omitted field is absent rather than empty.
+
 ## [1.0.6]
 ### Security
 - Hardened the test harness against SonarQube findings with code sanitization and safer input handling, ensuring user-provided manifest URLs are trimmed and validated before playback.
